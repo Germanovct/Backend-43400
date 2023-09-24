@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import productRouter from "./routes/products.router.js";
 import cartRouter from "./routes/cart.router.js";
+import usersRouter from "./routes/users.router.js";
 import { __dirname } from './utils.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
@@ -12,6 +13,7 @@ import cookieParser from 'cookie-parser';
 import loginRouter from './routes/login.router.js';
 import session from 'express-session';
 import FileStore from 'session-file-store';
+import mongoStore from 'connect-mongo';
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -52,11 +54,11 @@ app.get ('/api/borrarCookie', (req, res) => {
 })
 
 //Sessions
-const filestore = FileStore(session);
+
 app.use(session({ 
-  store : new filestore ({
-    path: __dirname+'/sessions'
-  }),
+  store : new mongoStore ({
+    mongoUrl:'mongodb+srv://germanovct:xKFq1VM03bw0LE4i@cluster0.xjdog2s.mongodb.net/ecommerceDB?retryWrites=true&w=majority'
+  }), 
   secret: 'XXXXXXX', 
   cookie: {maxAge: 60000},
 
@@ -67,6 +69,7 @@ app.use('/api/cart', cartRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/views', viewsRouter);
 app.use('/', viewsRouter);
+app.use('/api/users', usersRouter);
 
 
 
