@@ -14,6 +14,10 @@ import loginRouter from './routes/login.router.js';
 import session from 'express-session';
 import FileStore from 'session-file-store';
 import mongoStore from 'connect-mongo';
+import passport from 'passport';
+import "./passport/passportStrategies.js"
+
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -63,6 +67,11 @@ app.use(session({
   cookie: {maxAge: 60000},
 
 }));
+
+//Passport
+app.use (passport.initialize());
+app.use (passport.session());
+
 
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);

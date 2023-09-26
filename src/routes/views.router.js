@@ -14,6 +14,14 @@ router.get('/', (req, res) => {
   res.render('index', {});
 });
 
+router.get("/adminHome", (req, res) => {
+  res.render("adminHome");
+});
+
+router.get("/clientHome ", (req, res) => {
+  res.render("clientHome");
+});
+
 
 
 
