@@ -36,6 +36,7 @@ const router = Router();
 router.get('/githubSignup', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
 router.get('/github',passport.authenticate('github') , async (req, res) => {
+    console.log(req)
     res.send("Bienvenido desde github");
 });
 
