@@ -33,12 +33,11 @@ const router = Router();
     })
 
     //passport github
-router.get('/githubSignup', passport.authenticate('github', { scope: [ 'user:email' ] }));
-
-router.get('/github',passport.authenticate('github') , async (req, res) => {
-    console.log(req)
-    res.send("Bienvenido desde github");
-});
+    router.get('/githubSignup', passport.authenticate('github', { scope: [ 'user:email' ] }));
+    router.get('/github', passport.authenticate('github'), async (req, res) => {
+        console.log(req)
+        res.send("Bienvenido desde github");
+    });
 
 
 
