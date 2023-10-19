@@ -10,15 +10,15 @@ passport.use("local", new LocalStrategy(
     try {
       const userDB = await usersManager.findUser(username);
       if (!userDB) {
-        return done(null, false, { message: "user not found" });
+        return done(null, false, { message: "Usuario no encontrado" });
       } 
       const isPasswordValid = await compareData(password, userDB.password);
       if (!isPasswordValid) {
-        return done(null, false, { message: "invalid password" });
+        return done(null, false, { message: "Contraseña inválida" });
       }
       return done(null, userDB);
     } catch (error) {
-      done(error, null);
+      return done(error, null);
     }
   }
 ));
@@ -31,20 +31,27 @@ passport.use(new GitHubStrategy(
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
-      const userDB = await usersManager.findUser(profile.username);
-      if (!userDB) {
-        return done(null, false);
-      }
-      const newUser = { 
-        first_name: profile.displayName.split(' ')[0],
-        last_name: profile.displayName.split(' ')[1], 
-        password: '',
-      };
      
-      const result = await usersManager.create(newUser);
-      return done(null, result);
+      const userDB = await usersManager.findUser(profile.username);
+
+      if (!userDB) {
+       
+        const newUser = await usersManager.createUser({
+          username: profile.username,
+          password: 'password_predeterminada', 
+          first_name: 'NombrePredeterminado', 
+          last_name: 'ApellidoPredeterminado', 
+        });
+
+        
+
+        return done(null, newUser);
+      } else {
+        
+        return done(null, userDB);
+      }
     } catch (error) {
-      done(error);
+      return done(error, null);
     }
   }
 ));
@@ -53,7 +60,7 @@ passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
-passport.deserializeUser(async(id, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
     const user = await userModel.findById(id);
     done(null, user);
