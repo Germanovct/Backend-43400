@@ -16,6 +16,7 @@ import FileStore from 'session-file-store';
 import mongoStore from 'connect-mongo';
 import passport from 'passport';
 import "./passport/passportStrategies.js"
+import config from './config.js';
 
 
 
@@ -58,10 +59,11 @@ app.get ('/api/borrarCookie', (req, res) => {
 })
 
 //Sessions
+const MONGO_URI = config.MONGO_URI;
 
 app.use(session({ 
   store : new mongoStore ({
-    mongoUrl:'mongodb+srv://germanovct:xKFq1VM03bw0LE4i@cluster0.xjdog2s.mongodb.net/ecommerceDB?retryWrites=true&w=majority'
+      mongoUrl: MONGO_URI,
   }), 
   secret: 'XXXXXXX', 
   cookie: {maxAge: 60000},
@@ -113,12 +115,13 @@ io.on('connection', socket => {
 // ...
 
 
+const PORT = config.PORT;
+
+ httpServer.listen(PORT, () => {
+    console.log(`Escuchando en el puerto  ${PORT}`);
+  });
 
 
-const PORT = 8080;
-httpServer.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
 
 
 
