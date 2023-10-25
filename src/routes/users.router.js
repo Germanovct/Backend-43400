@@ -3,7 +3,7 @@ import { Router } from "express";
 import { usersManager } from "../db/usersManager.js";
 import { hashData } from "../utils.js";
 import passport from "passport";
- 
+ import { getUsers, createUser } from "../controllers/users.controllers.js";
 
 const router = Router();    
 
@@ -41,6 +41,9 @@ const router = Router();
     });
 
 
+
+router.get('/', getUsers);
+router.post('/', createUser);
 
 
 export default router;

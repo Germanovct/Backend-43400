@@ -3,6 +3,7 @@ import http from 'http';
 import productRouter from "./routes/products.router.js";
 import cartRouter from "./routes/cart.router.js";
 import usersRouter from "./routes/users.router.js";
+import productPersistencia from "./routes/product.persistencia.router.js"
 import { __dirname } from './utils.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
@@ -17,6 +18,9 @@ import mongoStore from 'connect-mongo';
 import passport from 'passport';
 import "./passport/passportStrategies.js"
 import config from './config.js';
+import cors from 'cors';
+
+
 
 
 
@@ -27,6 +31,7 @@ const httpServer = http.createServer(app);
 
  
 // Middlewares
+app.use(cors());
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -63,7 +68,7 @@ const MONGO_URI = config.MONGO_URI;
 
 app.use(session({ 
   store : new mongoStore ({
-      mongoUrl: MONGO_URI,
+  mongoUrl: MONGO_URI,
   }), 
   secret: 'XXXXXXX', 
   cookie: {maxAge: 60000},
@@ -81,6 +86,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/views', viewsRouter);
 app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/productPersistencia', productPersistencia);
 
 
 

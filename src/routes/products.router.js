@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ProductManager from '../../ProductManager.js';
+import ProductManager from "../DAL/ProductManager.js";
 
 const router = Router();
 
@@ -63,4 +63,15 @@ router.put('/:pid', async (req, res) => {
   }
 });
 
+
+
 export default router;
+
+
+
+
+
+
+
+
+
