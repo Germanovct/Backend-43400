@@ -51,7 +51,7 @@ router.get('/current', getCurrentUser);
 //CheckRoles
 
 // Rutas solo disponibles para administradores
-router.post('/admin/createProduct', checkRoleMiddleware('admin'), async (req, res) => {
+router.post('/admin/createProduct', passport.authenticate('local'), checkRoleMiddleware('admin'), async (req, res) => {
     try {
       const { name, description, code, image, price, stock } = req.body;
       const newProduct = new Product({
