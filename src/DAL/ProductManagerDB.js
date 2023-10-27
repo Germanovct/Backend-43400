@@ -1,33 +1,21 @@
-import { productsModel } from "../db/models/products.model.js";
+import ProductRepository from './product.repository.js';
 
 class ProductManager {
-    async getProducts() {
-        try {
-           
-            const products = await productsModel.find();
-            return products; 
-        } catch (error) {
-            return error;
-        }
-    }
+  constructor(productRepository) {
+    this.productRepository = productRepository;
+  }
 
-    async addProduct(obj) {
-        try {
-            
-            const newProduct = await new productsModel(obj).save();
-            return newProduct; 
-        } catch (error) {
-            return error;
-        }
-    }
+  async getProducts() {
+    return this.productRepository.findAll();
+  }
 
-    async getProductsById(id) {
-        try {
-            
-            const product = await productsModel.findById(id);
-            return product; 
-        } catch (error) {
-            return error;
-        }
-    }
+  async addProduct(obj) {
+    return this.productRepository.create(obj);
+  }
+
+  async getProductsById(id) {
+    return this.productRepository.findById(id);
+  }
 }
+
+export default new ProductManager(ProductRepository);

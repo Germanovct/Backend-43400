@@ -4,6 +4,8 @@ import productRouter from "./routes/products.router.js";
 import cartRouter from "./routes/cart.router.js";
 import usersRouter from "./routes/users.router.js";
 import productPersistencia from "./routes/product.persistencia.router.js"
+import mailerRouter from "./routes/mailer.router.js"
+import currentRouter from "./routes/users.router.js"
 import { __dirname } from './utils.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
@@ -87,7 +89,8 @@ app.use('/api/views', viewsRouter);
 app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/productPersistencia', productPersistencia);
-
+app.use('/api/mailer', mailerRouter);
+app.use('/api/current', currentRouter);
 
 
 // Handlebars
