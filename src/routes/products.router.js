@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const productManager = new ProductManager('Productos.json');
-    const newProduct = await productManager.addProduct(req.body); // Usar req.body aquí
+    const newProduct = await productManager.addProduct(req.body); 
     res.status(200).send('Producto agregado correctamente.');
   } catch (error) {
     res.status(404).send('Producto no agregado.');

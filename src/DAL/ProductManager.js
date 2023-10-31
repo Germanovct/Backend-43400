@@ -13,7 +13,7 @@ export default class ProductManager {
 
   async addProduct(obj) {
     try {
-      const newProduct = await productsModel.create(obj); // Usar create para agregar un producto
+      const newProduct = await productsModel.create(obj); 
       return newProduct;
     } catch (error) {
       return error;

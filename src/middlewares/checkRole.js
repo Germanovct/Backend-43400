@@ -4,7 +4,7 @@ export const checkRoleMiddleware = (role) => {
       const user = req.user;
 
       if (user.isAdmin || user.role === role) {
-        // El usuario tiene el rol necesario, permite el acceso.
+       
         next();
       } else {
         res.status(403).json({ message: "No tienes permisos para acceder a esta ruta" });

@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-// Definir rutas para productos
+// rutas para productos
 router.get("/", getProducts);
 router.post("/", createProduct);
 router.get("/:id", getProductById);
