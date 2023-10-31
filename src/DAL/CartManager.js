@@ -1,18 +1,10 @@
-import fs from 'fs';
+import { cartModel } from "../db/models/cart.model.js";
 
 export default class CartManager {
-  constructor(path) {
-    this.path = path;
-  }
-
   async getCarts() {
     try {
-      if (fs.existsSync(this.path)) {
-        const infoArchivo = await fs.promises.readFile(this.path, 'utf-8');
-        return JSON.parse(infoArchivo);
-      } else {
-        return [];
-      }
+      const carts = await cartModel.find();
+      return carts;
     } catch (error) {
       throw error;
     }
@@ -20,14 +12,8 @@ export default class CartManager {
 
   async addCart(cart) {
     try {
-      const carts = await this.getCarts();
-
-      const maxId = carts.length > 0 ? Math.max(...carts.map((cart) => cart.id)) : 0;
-
-      const newCart = { id: maxId + 1, ...cart, products: [] };
-      carts.push(newCart);
-
-      await fs.promises.writeFile(this.path, JSON.stringify(carts));
+      const newCart = new Cart({ ...cart, products: [] });
+      await newCart.save();
       return newCart;
     } catch (error) {
       throw error;
@@ -36,8 +22,7 @@ export default class CartManager {
 
   async getCartById(cartId) {
     try {
-      const carts = await this.getCarts();
-      const cart = carts.find((cart) => cart.id === cartId);
+      const cart = await cartModel.findById(cartId);
       return cart || null;
     } catch (error) {
       throw error;
@@ -46,17 +31,11 @@ export default class CartManager {
 
   async updateCart(updatedCart) {
     try {
-      const carts = await this.getCarts();
-      const cartIndex = carts.findIndex((cart) => cart.id === updatedCart.id);
-
-      if (cartIndex !== -1) {
-        carts[cartIndex] = updatedCart;
-      } else {
+      const cart = await cartModel.findByIdAndUpdate(updatedCart._id, updatedCart, { new: true });
+      if (!cart) {
         throw new Error('El carrito no existe.');
       }
-
-      await fs.promises.writeFile(this.path, JSON.stringify(carts));
-      return updatedCart;
+      return cart;
     } catch (error) {
       throw error;
     }

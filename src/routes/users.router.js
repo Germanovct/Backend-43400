@@ -124,7 +124,7 @@ router.post('/admin/createProduct', passport.authenticate('local'), checkRoleMid
   
   
 
-  router.post('/addToCart', (req, res) => {
+  router.post('/addToCart', checkRoleMiddleware('usuario'), (req, res) => {
     const productId = req.body.productId;
     const quantity = req.body.quantity;
   
@@ -154,7 +154,6 @@ const chat = [];
 // ...
 
 router.post('/sendMessage', (req, res) => {
- 
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: 'Usuario no autenticado' });
   }
@@ -162,15 +161,11 @@ router.post('/sendMessage', (req, res) => {
   const user = req.user;
   const message = req.body.message;
 
- 
   if (!message) {
     return res.status(400).json({ message: 'El mensaje no puede estar vacío' });
   }
 
- 
   chat.push({ user, message });
-
-  
 
   return res.status(200).json({ message: 'Mensaje enviado al chat exitosamente', chat });
 });
