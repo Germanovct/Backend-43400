@@ -2,18 +2,29 @@ import { Router } from 'express';
 import { productsModel } from '../db/models/products.model.js';
 import { cartModel } from '../db/models/cart.model.js';
 import TicketModel from '../db/models/tickets.model.js';
+import CustomError from '../services/errors/customErrors.js';
+
+
 
 const router = Router();
 
 // Ruta para crear un carrito
 router.post('/', async (req, res) => {
   try {
+    // Intenta crear un nuevo carrito aquí...
+    // Por ejemplo:
     const newCart = await cartModel.create({ products: [] });
-    res.status(201).json(newCart);
+
+    res.status(201).json({ message: 'Carrito creado correctamente.' });
   } catch (error) {
-    res.status(500).json({ error: 'No se pudo crear el carrito' });
+    if (error instanceof CustomError) {
+      res.status(error.code).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'No se pudo crear el carrito.' });
+    }
   }
 });
+
 
 // Ruta para obtener un carrito por ID
 router.get('/:cartId', async (req, res) => {

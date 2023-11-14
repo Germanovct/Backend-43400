@@ -1,5 +1,7 @@
 import { Router } from "express";
 import ProductManager from "../DAL/ProductManager.js";
+import CustomError from "../services/errors/customErrors.js";
+
 
 const router = Router();
 
@@ -22,7 +24,11 @@ router.post('/', async (req, res) => {
     const newProduct = await productManager.addProduct(req.body); 
     res.status(200).send('Producto agregado correctamente.');
   } catch (error) {
-    res.status(404).send('Producto no agregado.');
+    if (error instanceof CustomError) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Ocurrió un error al agregar el producto.' });
+    }
   }
 });
 
@@ -62,6 +68,7 @@ router.put('/:pid', async (req, res) => {
     res.status(404).send('Producto no encontrado.');
   }
 });
+
 
 
 

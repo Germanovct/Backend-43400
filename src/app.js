@@ -6,6 +6,9 @@ import usersRouter from "./routes/users.router.js";
 import productPersistencia from "./routes/product.persistencia.router.js"
 import mailerRouter from "./routes/mailer.router.js"
 import currentRouter from "./routes/users.router.js"
+import mocksproducts from "./routes/mocksproducts.router.js";
+import { errorHandler } from './middlewares/errorHandler.js';
+
 import { __dirname } from './utils.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
@@ -15,7 +18,6 @@ import "./db/dbConfig.js"
 import cookieParser from 'cookie-parser';
 import loginRouter from './routes/login.router.js';
 import session from 'express-session';
-import FileStore from 'session-file-store';
 import mongoStore from 'connect-mongo';
 import passport from 'passport';
 import "./passport/passportStrategies.js"
@@ -82,16 +84,20 @@ app.use (passport.initialize());
 app.use (passport.session());
 
 
+
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/views', viewsRouter);
-app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/productPersistencia', productPersistencia);
 app.use('/api/mailer', mailerRouter);
 app.use('/api/current', currentRouter);
+app.use('/', mocksproducts);
 
+
+app.use('/', viewsRouter);
+app.use(errorHandler);
 
 // Handlebars
 app.engine('handlebars', handlebars.engine());
