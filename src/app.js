@@ -7,6 +7,7 @@ import productPersistencia from "./routes/product.persistencia.router.js"
 import mailerRouter from "./routes/mailer.router.js"
 import currentRouter from "./routes/users.router.js"
 import mocksproducts from "./routes/mocksproducts.router.js";
+import loggerRouter from "./routes/logger.router.js";
 import { errorHandler } from './middlewares/errorHandler.js';
 
 import { __dirname } from './utils.js';
@@ -23,6 +24,8 @@ import passport from 'passport';
 import "./passport/passportStrategies.js"
 import config from './config.js';
 import cors from 'cors';
+import { loggerDev, loggerProd } from './loggerConfig.js';
+
 
 
 
@@ -40,8 +43,8 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   
-  console.log("Solicitud recibida:", req.method, req.url);
-  console.log("Cuerpo de la solicitud:", req.body);
+  loggerDev.log("Solicitud recibida:", req.method, req.url);
+  loggerDev.log("Cuerpo de la solicitud:", req.body);
 
   next(); 
 });
@@ -94,7 +97,7 @@ app.use('/api/productPersistencia', productPersistencia);
 app.use('/api/mailer', mailerRouter);
 app.use('/api/current', currentRouter);
 app.use('/', mocksproducts);
-
+app.use('/api/loggerTest', loggerRouter);
 
 app.use('/', viewsRouter);
 app.use(errorHandler);
@@ -121,7 +124,7 @@ const productList = [];
 const io = initializeWebSocketServer(httpServer, productList);
 
 io.on('connection', socket => {
-  console.log('Cliente conectado');
+  loggerDev.debug('Cliente conectado');
   socket.on('createProduct', newProduct => {
     productList.push(newProduct);
     io.emit('productList', productList);
@@ -132,9 +135,10 @@ io.on('connection', socket => {
 
 const PORT = config.PORT;
 
- httpServer.listen(PORT, () => {
-    console.log(`Escuchando en el puerto  ${PORT}`);
-  });
+httpServer.listen(PORT, () => {
+  loggerDev.info(`Escuchando en el puerto ${PORT}`);
+});
+
 
 
 
