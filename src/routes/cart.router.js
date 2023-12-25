@@ -11,8 +11,7 @@ const router = Router();
 // Ruta para crear un carrito
 router.post('/', async (req, res) => {
   try {
-    // Intenta crear un nuevo carrito aquí...
-    // Por ejemplo:
+
     const newCart = await cartModel.create({ products: [] });
 
     res.status(201).json({ message: 'Carrito creado correctamente.' });
