@@ -25,7 +25,9 @@ import "./passport/passportStrategies.js"
 import config from './config.js';
 import cors from 'cors';
 import { loggerDev, loggerProd } from './loggerConfig.js';
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocs from './swagger/swaggerConfig.js'; 
+import swaggerRouter from './swagger/swaggerConfig.js';
 
 
 
@@ -36,10 +38,12 @@ const httpServer = http.createServer(app);
 
 
 
+
  
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.use (swaggerRouter)
 
 app.use((req, res, next) => {
   
@@ -52,6 +56,7 @@ app.use((req, res, next) => {
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Cookie
 app.use(cookieParser());
@@ -131,6 +136,7 @@ io.on('connection', socket => {
   });
 });
 // ...
+
 
 
 const PORT = config.PORT;

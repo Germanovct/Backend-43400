@@ -3,6 +3,41 @@ import ProductManager from "../DAL/ProductManager.js";
 import CustomError from "../services/errors/customErrors.js";
 
 
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Agrega un nuevo producto.
+ *     description: Crea un nuevo producto y lo agrega a la lista de productos.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: El título del producto.
+ *               price:
+ *                 type: number
+ *                 description: El precio del producto.
+ *               description:
+ *                 type: string
+ *                 description: La descripción del producto.
+ *             example:
+ *               title: Producto 1
+ *               price: 10
+ *               description: Este es el producto 1
+ *     responses:
+ *       '200':
+ *         description: Producto agregado correctamente.
+ *       '400':
+ *         description: Error al agregar el producto.
+ *       '500':
+ *         description: Ocurrió un error al agregar el producto.
+ */
+
 const router = Router();
 
 router.get('/', async (req, res) => {
