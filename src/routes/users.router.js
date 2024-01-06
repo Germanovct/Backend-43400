@@ -5,8 +5,67 @@ import { hashData } from "../utils.js";
 import passport from "passport";
 import { getUsers, createUser, getCurrentUser } from "../controllers/users.controllers.js";
 import { checkRoleMiddleware } from "../middlewares/checkRole.js";
+import { transporter } from "../nodemailer.js";
 
 const router = Router();    
+
+// Obtener todos los usuarios con datos principales
+router.get('/', async (req, res) => {
+  try {
+    const users = await usersManager.getAllUsers();
+    const simplifiedUsers = users.map(user => ({
+      name: user.first_name + ' ' + user.last_name,
+      email: user.email,
+      role: user.role,
+    }));
+    res.status(200).json(simplifiedUsers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener usuarios' });
+  }
+});
+
+router.delete('/', async (req, res) => {
+  try {
+    const deletedUsers = await usersManager.deleteInactiveUsers();
+
+    deletedUsers.forEach(async user => {
+      try {
+        const mailOptions = {
+          from: 'germanovct@gmail.com',
+          to: user.email,
+          subject: 'Eliminación por inactividad',
+          text: 'Tu cuenta ha sido eliminada por inactividad. Contáctanos para más información.',
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Correo enviado a ${user.email}`);
+      } catch (error) {
+        console.error(`Error al enviar correo a ${user.email}: ${error}`);
+      }
+    });
+
+    res.status(200).json({ message: 'Usuarios inactivos eliminados' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar usuarios inactivos' });
+  }
+});
+
+// Crear vista para administradores
+router.get('/adminHome', checkRoleMiddleware('admin'), async (req, res) => {
+  // Lógica para renderizar la vista de administrador
+});
+
+// Modificar endpoint de eliminación de productos
+router.delete('/admin/deleteProduct/:productId', checkRoleMiddleware('admin'), async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    // Verifica si el producto pertenece a un usuario premium y envía correo si es necesario
+    // Lógica para enviar el correo al usuario premium
+    res.status(200).json({ message: 'Producto eliminado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el producto' });
+  }
+});
 
  router.post('/signup', async (req, res) => {
     const {first_name,last_name, username, password } = req.body;
